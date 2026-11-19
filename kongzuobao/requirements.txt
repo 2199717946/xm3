@@ -1,0 +1,5 @@
+Flask>=3.0
+
+# 线上用 gunicorn 跑（Flask 自带的开发服务器不能对外）。
+# 本地 Windows 上装是能装上，但跑不起来，本地继续用 python app.py 就行。
+gunicorn>=21.2

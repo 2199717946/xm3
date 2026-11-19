@@ -1,0 +1,34 @@
+ * Serving Flask app 'app'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://172.16.228.173:5001
+Press CTRL+C to quit
+127.0.0.1 - - [19/Nov/2026 06:53:34] "GET /api/meta HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:53:34] "GET /api/meta HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:53:34] "GET /api/overview HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:53:34] "GET /api/rooms?socket=1&quiet=3&people=2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:53:34] "GET /api/rooms/1 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:53:34] "POST /api/reserve HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:53:34] "POST /api/reserve HTTP/1.1" 409 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "GET /api/meta HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "GET /api/overview HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "GET /api/rooms?socket=1&quiet=3&people=2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "GET /api/rooms/1 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "POST /api/reserve HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "POST /api/reserve HTTP/1.1" 409 -
+127.0.0.1 - - [19/Nov/2026 06:55:01] "GET /api/rooms/1 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "GET /api/meta HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "GET /api/overview HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "GET /api/rooms?socket=1&quiet=3&people=2 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "GET /api/rooms/1 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "POST /api/reserve HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "POST /api/reserve HTTP/1.1" 409 -
+127.0.0.1 - - [19/Nov/2026 06:55:12] "GET /api/rooms/1 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:13] "GET /api/reservations?user=≤‚ ‘Õ¨—ß HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:13] "POST /api/report HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:13] "GET /api/reports HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:13] "POST /api/reservations/3/cancel HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:13] "GET /api/rooms/1 HTTP/1.1" 200 -
+127.0.0.1 - - [19/Nov/2026 06:55:13] "GET /api/member?user=Œ“ HTTP/1.1" 200 -

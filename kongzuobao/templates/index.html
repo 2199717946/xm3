@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>空座宝 · 校园自习室空位地图</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="phone">
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">座</span>
+      <div>
+        <h1>空座宝</h1>
+        <p class="brand-sub">校园自习室空位地图</p>
+      </div>
+    </div>
+    <div class="live" id="liveBadge" title="数据每 6 秒刷新一次">
+      <span class="live-dot"></span><span id="liveText">实时</span>
+    </div>
+  </header>
+
+  <main class="scroll" id="scroll">
+
+    <!-- ============ 找座 ============ -->
+    <section class="view is-active" id="view-home">
+      <div class="card hero">
+        <div class="hero-head">
+          <div>
+            <p class="stat-label">全校当前空位</p>
+            <p class="stat-value"><span id="ovFree">–</span><small id="ovTotal">/ –</small></p>
+          </div>
+          <div class="hero-risk" id="ovRisk"><span class="risk-badge"><i></i>加载中</span></div>
+        </div>
+        <div class="meter" id="ovMeter" aria-hidden="true"></div>
+        <p class="hero-note" id="ovNote">正在读取门禁与插座数据…</p>
+      </div>
+
+      <div class="card">
+        <div class="filter-head">
+          <h2>筛选</h2>
+          <button class="link" id="resetFilter" type="button">重置</button>
+        </div>
+
+        <p class="field-label">楼栋</p>
+        <div class="chips" id="buildingChips"></div>
+
+        <p class="field-label">楼层</p>
+        <div class="chips" id="floorChips"></div>
+
+        <p class="field-label">安静程度</p>
+        <div class="chips" id="quietChips">
+          <button class="chip is-on" data-quiet="0" type="button">不限</button>
+          <button class="chip" data-quiet="1" type="button">可讨论</button>
+          <button class="chip" data-quiet="2" type="button">较安静</button>
+          <button class="chip" data-quiet="3" type="button">静音区</button>
+        </div>
+
+        <p class="field-label">同行人数</p>
+        <div class="chips" id="peopleChips">
+          <button class="chip is-on" data-people="1" type="button">1 人</button>
+          <button class="chip" data-people="2" type="button">2 人</button>
+          <button class="chip" data-people="4" type="button">3-4 人</button>
+        </div>
+
+        <label class="switch-row">
+          <span>只要有插座的座位</span>
+          <input type="checkbox" id="socketOnly">
+          <span class="switch" aria-hidden="true"></span>
+        </label>
+      </div>
+
+      <div class="section-head">
+        <h2>推荐给你</h2>
+        <span class="hint" id="recHint">按空位率 · 安静度 · 插座综合排序</span>
+      </div>
+      <div id="recList" class="list"></div>
+
+      <div class="section-head">
+        <h2>全部自习室</h2>
+        <span class="hint" id="allCount"></span>
+      </div>
+      <div id="roomList" class="list"></div>
+    </section>
+
+    <!-- ============ 地图 ============ -->
+    <section class="view" id="view-map">
+      <div class="card">
+        <div class="map-head">
+          <div>
+            <h2 id="mapRoomName">请选择自习室</h2>
+            <p class="muted" id="mapRoomMeta">从「找座」里点一间自习室即可查看座位图</p>
+          </div>
+          <button class="icon-btn" id="refreshMap" type="button" title="刷新">⟳</button>
+        </div>
+        <div class="meter" id="mapMeter" aria-hidden="true"></div>
+        <div class="legend" id="mapLegend">
+          <span class="lg"><i class="dot dot-free"></i>空闲 <b id="lgFree">0</b></span>
+          <span class="lg"><i class="dot dot-res"></i>已预约 <b id="lgRes">0</b></span>
+          <span class="lg"><i class="dot dot-occ"></i>有人 <b id="lgOcc">0</b></span>
+        </div>
+      </div>
+
+      <div class="card seatmap-card">
+        <div class="seatmap-wrap">
+          <div class="seatmap" id="seatmap"></div>
+          <div class="empty-state" id="mapEmpty">
+            <p class="big">🗺️</p>
+            <p>还没有选自习室</p>
+            <p class="muted">去「找座」挑一间，就能看到哪个位置空着</p>
+          </div>
+        </div>
+        <p class="axis-note">座位图每 6 秒自动刷新 · 靠墙与过道边的座位带插座</p>
+      </div>
+    </section>
+
+    <!-- ============ 预约 ============ -->
+    <section class="view" id="view-booking">
+      <div class="card">
+        <h2>我的预约</h2>
+        <p class="muted">到点前 15 分钟推送提醒，避免和同学抢座起纠纷</p>
+      </div>
+      <div id="bookingList" class="list"></div>
+      <div class="card empty-card" id="bookingEmpty">
+        <p class="big">🪑</p>
+        <p>还没有预约</p>
+        <p class="muted">在座位图上点一个空座，一键锁定</p>
+        <button class="btn btn-primary" data-goto="home" type="button">去找座</button>
+      </div>
+    </section>
+
+    <!-- ============ 我的 ============ -->
+    <section class="view" id="view-mine">
+      <div class="card member-card" id="memberCard">
+        <div class="member-head">
+          <div>
+            <p class="stat-label">空座宝会员</p>
+            <p class="member-price">¥9.9 <small>/ 月</small></p>
+          </div>
+          <span class="pill" id="memberState">未开通</span>
+        </div>
+        <ul class="benefits" id="memberBenefits"></ul>
+        <button class="btn btn-primary" id="memberBtn" type="button">开通会员</button>
+        <p class="muted tiny">原型演示，不产生任何真实扣费</p>
+      </div>
+
+      <div class="card">
+        <h2>数据从哪来</h2>
+        <ul class="source-list">
+          <li><span class="src-tag src-access">门禁刷卡</span>进出记录判断座位是否有人</li>
+          <li><span class="src-tag src-socket">插座用电</span>检测台灯、电脑是否在用电</li>
+          <li><span class="src-tag src-crowd">众包上报</span>同学看到实际情况一键纠正</li>
+        </ul>
+        <p class="muted tiny">三路数据融合，比亲自跑一趟更准。</p>
+      </div>
+
+      <div class="card">
+        <h2>最近上报</h2>
+        <div id="reportList" class="report-list"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部导航 -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab is-active" data-view="home" type="button">
+      <span class="tab-icon">🔍</span><span>找座</span>
+    </button>
+    <button class="tab" data-view="map" type="button">
+      <span class="tab-icon">🗺️</span><span>地图</span>
+    </button>
+    <button class="tab" data-view="booking" type="button">
+      <span class="tab-icon">⏰</span><span>预约</span>
+    </button>
+    <button class="tab" data-view="mine" type="button">
+      <span class="tab-icon">👤</span><span>我的</span>
+    </button>
+  </nav>
+
+  <!-- 座位详情抽屉 -->
+  <div class="sheet-mask" id="sheetMask"></div>
+  <div class="sheet" id="seatSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-body">
+      <div class="sheet-head">
+        <div>
+          <h2 id="sheetSeat">座位</h2>
+          <p class="muted" id="sheetRoom"></p>
+        </div>
+        <span class="status-badge" id="sheetStatus">空闲</span>
+      </div>
+      <dl class="kv">
+        <div><dt>插座</dt><dd id="sheetSocket">—</dd></div>
+        <div><dt>数据来源</dt><dd id="sheetSource">—</dd></div>
+        <div><dt>更新时间</dt><dd id="sheetUpdated">—</dd></div>
+      </dl>
+      <div class="sheet-actions">
+        <button class="btn btn-primary" id="sheetReserve" type="button">预约这个座位</button>
+        <div class="report-row">
+          <button class="btn btn-ghost" data-report="free" type="button">这里其实空着</button>
+          <button class="btn btn-ghost" data-report="occupied" type="button">这里被占了</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

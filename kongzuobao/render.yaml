@@ -1,0 +1,20 @@
+# Render 蓝图文件：在 Render 里选 "New +" → "Blueprint"，指向这个仓库就能一键建服务。
+# 不用手填构建命令和启动命令。
+services:
+  - type: web
+    name: kongzuobao
+    runtime: python
+    plan: free
+    # 新加坡节点离国内最近。如果这行报错说 region 不合法，删掉它，
+    # 建服务时在下拉框里手动选 Singapore 即可。
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    # ⚠️ --workers 必须保持 1。
+    # app.py 在导入时会启动"实时数据"模拟线程，每个 worker 各起一份的话，
+    # 座位状态会以 N 倍速乱跳，还会互相抢 SQLite 写锁。
+    # 免费实例单核，1 worker + 8 线程足够撑住演示。
+    startCommand: gunicorn app:app --workers 1 --threads 8 --timeout 60 --bind 0.0.0.0:$PORT
+    healthCheckPath: /
+    envVars:
+      - key: RUN_SIMULATOR
+        value: "1"
